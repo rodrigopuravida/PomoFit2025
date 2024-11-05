@@ -65,13 +65,29 @@ struct ContentView: View {
                 .clipShape(RoundedRectangle(cornerRadius: 25))
                 .padding()
             
-            Text("Time: \(timeRemaining)")
+            Text("Time Left: \(timeRemaining)")
                 .font(.largeTitle)
                 .foregroundStyle(.white)
                 .padding(.horizontal, 20)
                 .padding(.vertical, 5)
                 .background(.black.opacity(0.75))
                 .clipShape(.capsule)
+                .padding()
+            
+            Button(action: {
+                // Action for the Reset button
+                timeRemaining = 0
+                copyOfTimeRemaining = 0
+                isTextVisible = false
+                    }) {
+                        Text("Reset")
+                            .font(.headline) // Sets the font size
+                            .foregroundColor(.white) // Text color
+                            .padding() // Adds padding inside the button
+                            .background(Color.red) // Button background color
+                            .cornerRadius(10) // Rounds the corners
+                            .shadow(radius: 5) // Adds a shadow for depth
+                    }
         }
         .onReceive(timer) { time in
             guard isActive else {
