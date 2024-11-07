@@ -17,6 +17,7 @@ struct ContentView: View {
     
     @State private var isTextVisible: Bool = false
 
+
     var body: some View {
         VStack {
                 VStack {
@@ -39,8 +40,8 @@ struct ContentView: View {
                                     ))
                             .font(.largeTitle)
                             .multilineTextAlignment(.center) // Centers the text
-                            .frame(width: 100, height: 25)
-                            .keyboardType(.numberPad) // Opens a numeric keyboard
+                            .frame(width: 200, height: 25)
+                            .keyboardType(.default) // Opens a default keyboard
                             .textFieldStyle(RoundedBorderTextFieldStyle())
                             .padding()
                         }
