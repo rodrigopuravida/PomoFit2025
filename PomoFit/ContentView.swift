@@ -39,7 +39,7 @@ struct ContentView: View {
                                     ))
                             .font(.largeTitle)
                             .multilineTextAlignment(.center) // Centers the text
-                            .frame(width: 300, height: 25)
+                            .frame(width: 100, height: 25)
                             .keyboardType(.numberPad) // Opens a numeric keyboard
                             .textFieldStyle(RoundedBorderTextFieldStyle())
                             .padding()
@@ -58,12 +58,22 @@ struct ContentView: View {
                     
                 }
 
-
-            Image("1024")
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .clipShape(RoundedRectangle(cornerRadius: 25))
-                .padding()
+            if (timeRemaining % 2 == 0) {
+                
+                Image("Battle")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .clipShape(RoundedRectangle(cornerRadius: 25))
+                    .padding()
+            }
+            
+            else {
+                Image("Sitting2")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .clipShape(RoundedRectangle(cornerRadius: 25))
+                    .padding()
+            }
             
             Text("Time Left: \(timeRemaining)")
                 .font(.largeTitle)
