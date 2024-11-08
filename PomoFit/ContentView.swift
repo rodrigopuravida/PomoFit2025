@@ -16,6 +16,7 @@ struct ContentView: View {
     @State private var isActive = true
     
     @State private var isTextVisible: Bool = false
+    @FocusState private var isTextFieldFocused: Bool
 
 
     var body: some View {
@@ -26,8 +27,7 @@ struct ContentView: View {
                             .font(.largeTitle)
                     }
                     
-                    ZStack {
-                        
+
                         if !isTextVisible {
                             TextField("Enter time", text: Binding(
                                         get: { String(timeRemaining) },
@@ -39,11 +39,13 @@ struct ContentView: View {
                                         }
                                     ))
                             .font(.largeTitle)
+                            .focused($isTextFieldFocused)
                             .multilineTextAlignment(.center) // Centers the text
                             .frame(width: 200, height: 25)
-                            .keyboardType(.default) // Opens a default keyboard
+                            .keyboardType(.numberPad) // Opens a numberpad keyboard
                             .textFieldStyle(RoundedBorderTextFieldStyle())
                             .padding()
+
                         }
                         
                         
@@ -55,7 +57,7 @@ struct ContentView: View {
                                 .frame(width: 300, height: 25)
                         }
 
-                    }
+                    
                     
                 }
 
@@ -100,6 +102,15 @@ struct ContentView: View {
                             .shadow(radius: 5) // Adds a shadow for depth
                     }
         }
+        .toolbar {
+                    ToolbarItemGroup(placement: .keyboard) {
+                        Spacer()
+                        Button("Done") {
+                            isTextFieldFocused = false // Dismiss keyboard on tap
+                        }
+                    }
+                }
+        
         .onReceive(timer) { time in
             guard isActive else {
                 return
