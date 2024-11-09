@@ -127,8 +127,10 @@ struct ContentView: View {
         .onChange(of: scenePhase) {
             if scenePhase == .active {
                 isActive = true
+                UIApplication.shared.isIdleTimerDisabled = true
             } else {
                 isActive = false
+                UIApplication.shared.isIdleTimerDisabled = false
             }
         }
         
