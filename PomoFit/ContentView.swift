@@ -57,8 +57,6 @@ struct ContentView: View {
                                 .frame(width: 300, height: 25)
                         }
 
-                    
-                    
                 }
 
             if (timeRemaining % 2 == 0) {
@@ -102,14 +100,7 @@ struct ContentView: View {
                             .shadow(radius: 5) // Adds a shadow for depth
                     }
         }
-        .toolbar {
-                    ToolbarItemGroup(placement: .keyboard) {
-                        Spacer()
-                        Button("Done") {
-                            isTextFieldFocused = false // Dismiss keyboard on tap
-                        }
-                    }
-                }
+        
         
         .onReceive(timer) { time in
             guard isActive else {
@@ -133,8 +124,17 @@ struct ContentView: View {
                 UIApplication.shared.isIdleTimerDisabled = false
             }
         }
+        .toolbar {
+                    ToolbarItemGroup(placement: .keyboard) {
+                        Spacer()
+                        Button("Done") {
+                            isTextFieldFocused = false // Dismiss keyboard on tap
+                        }
+                    }
+                }
         
     }
+    
     
     
 }
