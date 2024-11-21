@@ -19,7 +19,7 @@ struct ContentView: View {
     @FocusState private var isTextFieldFocused: Bool
     
     //random images
-    let randomNumber = Int.random(in: 1...3)
+    @State var randomNumber = Int.random(in: 1...3)
 
 
     var body: some View {
@@ -62,7 +62,7 @@ struct ContentView: View {
 
                 }
 
-            if (Int.random(in: 1...3) == 1) {
+            if (randomNumber == 1) {
                 
                 Image("Battle")
                     .resizable()
@@ -71,7 +71,7 @@ struct ContentView: View {
                     .padding()
             }
             
-            else if (Int.random(in: 1...3) == 2){
+            else if (randomNumber == 2){
                 Image("Sitting2")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
@@ -121,6 +121,7 @@ struct ContentView: View {
             if timeRemaining > 0 {
                 timeRemaining -= 1
                 isTextVisible = true
+                randomNumber = Int.random(in: 1...3)
             }
             else {
                 isTextVisible = false
