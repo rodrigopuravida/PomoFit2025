@@ -122,6 +122,7 @@ struct ContentView: View {
                 timeRemaining -= 1
                 isTextVisible = true
                 randomNumber = Int.random(in: 1...3)
+                print(randomNumber)
             }
             else {
                 isTextVisible = false
