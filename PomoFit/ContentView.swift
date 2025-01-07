@@ -9,8 +9,8 @@ import SwiftUI
 
 struct ContentView: View {
    
-    @State private var timeRemaining = 25
-    @State  var copyOfTimeRemaining : Int
+    @State  public var timeRemaining : Int
+    @State  public var copyOfTimeRemaining : Int
     let timer = Timer.publish(every: 60, on: .main, in: .common).autoconnect()
     @Environment(\.scenePhase) var scenePhase
     @State private var isActive = true
@@ -26,13 +26,18 @@ struct ContentView: View {
         VStack {
                 VStack {
                     ZStack {
-                        Text("Time to focus")
-                            .font(.largeTitle)
+                        VStack {
+                            Text("Time to focus")
+                                .font(.largeTitle)
+                            Text("Enter your time in minutes below")
+                                .font(.subheadline)
+                        }
+                        
                     }
                     
 
                         if !isTextVisible {
-                            TextField("Enter time", text: Binding(
+                            TextField("", text: Binding(
                                         get: { String(timeRemaining) },
                                         set: { newValue in
                                             if let intValue = Int(newValue) {
@@ -96,23 +101,26 @@ struct ContentView: View {
                 .clipShape(.capsule)
                 .padding()
             
-            Button(action: {
-                // Action for the Reset button
-                timeRemaining = 0
-                copyOfTimeRemaining = 0
-                isTextVisible = false
-                    }) {
-                        Text("Reset")
-                            .font(.headline) // Sets the font size
-                            .foregroundColor(.white) // Text color
-                            .padding() // Adds padding inside the button
-                            .background(Color.red) // Button background color
-                            .cornerRadius(10) // Rounds the corners
-                            .shadow(radius: 5) // Adds a shadow for depth
-                    }
-        }
-        
-        
+            HStack {
+
+                Button(action: {
+                    // Action for the Reset button
+                    timeRemaining = 0
+                    copyOfTimeRemaining = 0
+                    isTextVisible = false
+                        }) {
+                            Text("Reset")
+                                .font(.headline) // Sets the font size
+                                .foregroundColor(.white) // Text color
+                                .padding() // Adds padding inside the button
+                                .background(Color.red) // Button background color
+                                .cornerRadius(10) // Rounds the corners
+                                .shadow(radius: 5) // Adds a shadow for depth
+                        }
+                }
+            }
+            
+
         .onReceive(timer) { time in
             guard isActive else {
                 return
@@ -122,7 +130,7 @@ struct ContentView: View {
                 timeRemaining -= 1
                 isTextVisible = true
                 randomNumber = Int.random(in: 1...3)
-                print(randomNumber)
+                //print(randomNumber)
             }
             else {
                 isTextVisible = false
@@ -140,7 +148,7 @@ struct ContentView: View {
         .toolbar {
                     ToolbarItemGroup(placement: .keyboard) {
                         Spacer()
-                        Button("Done") {
+                        Button("Start Timer") {
                             isTextFieldFocused = false // Dismiss keyboard on tap
                         }
                     }
@@ -153,5 +161,5 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView(copyOfTimeRemaining:3)
+    ContentView(timeRemaining: 2, copyOfTimeRemaining: 2)
 }
