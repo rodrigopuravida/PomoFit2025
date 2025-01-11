@@ -8,83 +8,64 @@
 import SwiftUI
 
 struct ContentView: View {
-   
-    @State  public var timeRemaining : Int
-    @State  public var copyOfTimeRemaining : Int
-    let timer = Timer.publish(every: 60, on: .main, in: .common).autoconnect()
-    @Environment(\.scenePhase) var scenePhase
-    @State private var isActive = true
-    
-    @State private var isTextVisible: Bool = false
-    @FocusState private var isTextFieldFocused: Bool
-    
-    //random images
+    @State private var timeRemaining = 0
+    @State private var totalTime = 0
+    @State private var timer: Timer?
+    @State private var isRunning = false
+    @State private var timeInput: String = ""
     @State var randomNumber = Int.random(in: 1...3)
-
-
+    @State private var isTextFieldDisabled = false
+    
     var body: some View {
         VStack {
-                VStack {
-                    ZStack {
-                        VStack {
-                            Text("Time to focus")
-                                .font(.largeTitle)
-                            Text("Enter your time in minutes below")
-                                .font(.subheadline)
-                        }
-                        
-                    }
-                    
-
-                        if !isTextVisible {
-                            TextField("", text: Binding(
-                                        get: { String(timeRemaining) },
-                                        set: { newValue in
-                                            if let intValue = Int(newValue) {
-                                                timeRemaining = intValue
-                                                copyOfTimeRemaining = intValue
-                                            }
-                                        }
-                                    ))
-                            .font(.largeTitle)
-                            .focused($isTextFieldFocused)
-                            .multilineTextAlignment(.center) // Centers the text
-                            .frame(width: 200, height: 25)
-                            .keyboardType(.numberPad) // Opens a numberpad keyboard
-                            .textFieldStyle(RoundedBorderTextFieldStyle())
-                            .padding()
-
-                        }
-                        
-                        
-                        if (isTextVisible) {
-                            Text(String(copyOfTimeRemaining))
-                                .font(.largeTitle)
-                                .foregroundColor(Color.red)
-                                .multilineTextAlignment(.center) // Centers the text
-                                .frame(width: 300, height: 25)
-                        }
-
-                }
-
-            if (randomNumber == 1) {
+            VStack {
+                Text("Time to focus")
+                    .font(.largeTitle)
+                Text("Enter your time in minutes below")
+                    .font(.subheadline)
                 
+                TextField("Minutes", text: $timeInput)
+                    .font(.title)
+                    .keyboardType(.numberPad)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .disabled(isTextFieldDisabled)
+                    .frame(width: 200)
+                    .padding()
+                    .multilineTextAlignment(.center)
+            }
+            
+            ZStack {
+                Circle()
+                    .stroke(lineWidth: 10)
+                    .opacity(0.3)
+                    .foregroundColor(.gray)
+                
+                Circle()
+                    .trim(from: 0.0, to: CGFloat(timeRemaining) / CGFloat(totalTime))
+                    .stroke(style: StrokeStyle(lineWidth: 5, lineCap: .round, lineJoin: .round))
+                    .foregroundColor(.red)
+                    .rotationEffect(Angle(degrees: 270))
+                    .animation(.linear, value: timeRemaining)
+                
+                Text("\(timeRemaining/60)")
+                    .font(.title)
+                    .foregroundColor(.red)
+            }
+            .frame(width: 100, height: 100)
+            
+            if (randomNumber == 1) {
                 Image("Battle")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .clipShape(RoundedRectangle(cornerRadius: 25))
                     .padding()
-            }
-            
-            else if (randomNumber == 2){
+            } else if (randomNumber == 2) {
                 Image("Sitting2")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .clipShape(RoundedRectangle(cornerRadius: 25))
                     .padding()
-            }
-            
-            else {
+            } else {
                 Image("Tarz")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
@@ -92,74 +73,76 @@ struct ContentView: View {
                     .padding()
             }
             
-            Text("Time Left: \(timeRemaining)")
-                .font(.largeTitle)
-                .foregroundStyle(.white)
-                .padding(.horizontal, 20)
-                .padding(.vertical, 5)
-                .background(.black.opacity(0.75))
-                .clipShape(.capsule)
-                .padding()
-            
             HStack {
-
-                Button(action: {
-                    // Action for the Reset button
-                    timeRemaining = 0
-                    copyOfTimeRemaining = 0
-                    isTextVisible = false
-                        }) {
-                            Text("Reset")
-                                .font(.headline) // Sets the font size
-                                .foregroundColor(.white) // Text color
-                                .padding() // Adds padding inside the button
-                                .background(Color.red) // Button background color
-                                .cornerRadius(10) // Rounds the corners
-                                .shadow(radius: 5) // Adds a shadow for depth
-                        }
+                Button(action: startTimer) {
+                    Text("Start")
                 }
+                .disabled(isRunning)
+                .font(.headline)
+                .foregroundColor(.white)
+                .padding()
+                .background(Color.black)
+                .cornerRadius(10)
+                .shadow(radius: 5)
+                
+                /*
+                Button(action: stopTimer) {
+                    Text("Stop")
+                }
+                .disabled(!isRunning)
+                .font(.headline)
+                .foregroundColor(.white)
+                .padding()
+                .background(Color.red)
+                .cornerRadius(10)
+                .shadow(radius: 5)
+                 */
+                
+                Button(action: resetTimer) {
+                    Text("Reset")
+                }
+                .font(.headline)
+                .foregroundColor(.white)
+                .padding()
+                .background(Color.red)
+                .cornerRadius(10)
+                .shadow(radius: 5)
             }
-            
-
-        .onReceive(timer) { time in
-            guard isActive else {
-                return
-            }
-
+        }
+    }
+    
+    func startTimer() {
+        guard let minutes = Int(timeInput), minutes > 0 else { return }
+        isRunning = true
+        totalTime = minutes * 60
+        timeRemaining = totalTime
+        isTextFieldDisabled.toggle()
+        timer = Timer.scheduledTimer(withTimeInterval: 60, repeats: true) { _ in
             if timeRemaining > 0 {
-                timeRemaining -= 1
-                isTextVisible = true
+                timeRemaining -= 60
                 randomNumber = Int.random(in: 1...3)
-                //print(randomNumber)
-            }
-            else {
-                isTextVisible = false
-            }
-        }
-        .onChange(of: scenePhase) {
-            if scenePhase == .active {
-                isActive = true
-                UIApplication.shared.isIdleTimerDisabled = true
             } else {
-                isActive = false
-                UIApplication.shared.isIdleTimerDisabled = false
+                stopTimer()
             }
         }
-        .toolbar {
-                    ToolbarItemGroup(placement: .keyboard) {
-                        Spacer()
-                        Button("Start Timer") {
-                            isTextFieldFocused = false // Dismiss keyboard on tap
-                        }
-                    }
-                }
-        
     }
     
     
+    func stopTimer() {
+        isRunning = false
+        timer?.invalidate()
+        timer = nil
+    }
+     
     
+    func resetTimer() {
+        stopTimer()
+        timeRemaining = 0
+        totalTime = 0
+        timeInput = ""
+    }
 }
 
 #Preview {
-    ContentView(timeRemaining: 2, copyOfTimeRemaining: 2)
+    ContentView()
 }

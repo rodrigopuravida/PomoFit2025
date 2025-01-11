@@ -11,7 +11,7 @@ import SwiftUI
 struct PomoFitApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView(timeRemaining: 0, copyOfTimeRemaining: 0)
+            ContentView()
         }
     }
 }
