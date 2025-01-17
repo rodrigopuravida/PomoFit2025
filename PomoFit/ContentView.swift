@@ -16,6 +16,13 @@ struct ContentView: View {
     @State var randomNumber = Int.random(in: 1...3)
     @State private var isTextFieldDisabled = false
     
+    var formattedTime: String {
+            let minutes = timeRemaining
+            let seconds = timeRemaining % 60
+            //return String(format: "%02d:%02d", minutes, seconds)
+            return String(format: "%02d", minutes, seconds)
+        }
+    
     
     var body: some View {
         VStack {
@@ -48,7 +55,8 @@ struct ContentView: View {
                     .rotationEffect(Angle(degrees: 270))
                     .animation(.linear, value: timeRemaining)
                 
-                Text("\(timeRemaining/60)")
+                //Text("\(timeRemaining/60)")
+                Text(formattedTime)
                     .font(.title)
                     .foregroundColor(.red)
             }
@@ -119,12 +127,13 @@ struct ContentView: View {
         timeRemaining = totalTime
         isTextFieldDisabled.toggle()
         timeInput = "Running ..."
-        timer = Timer.scheduledTimer(withTimeInterval: 60, repeats: true) { _ in
+        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
             if timeRemaining > 0 {
-                timeRemaining -= 60
+                timeRemaining -= 1
                 randomNumber = Int.random(in: 1...3)
             } else {
                 stopTimer()
+                isTextFieldDisabled.toggle()
             }
         }
     }
