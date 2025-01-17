@@ -16,6 +16,7 @@ struct ContentView: View {
     @State var randomNumber = Int.random(in: 1...3)
     @State private var isTextFieldDisabled = false
     
+    
     var body: some View {
         VStack {
             VStack {
@@ -117,6 +118,7 @@ struct ContentView: View {
         totalTime = minutes * 60
         timeRemaining = totalTime
         isTextFieldDisabled.toggle()
+        timeInput = "Running ..."
         timer = Timer.scheduledTimer(withTimeInterval: 60, repeats: true) { _ in
             if timeRemaining > 0 {
                 timeRemaining -= 60
@@ -132,6 +134,7 @@ struct ContentView: View {
         isRunning = false
         timer?.invalidate()
         timer = nil
+        timeInput = ""
     }
      
     
