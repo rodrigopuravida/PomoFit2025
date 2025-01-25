@@ -15,6 +15,12 @@ struct ContentView: View {
     @State private var timeInput: String = ""
     @State var randomNumber = Int.random(in: 1...3)
     @State private var isTextFieldDisabled = false
+    @State private var isStartButtonDisabled = false
+    @State private var isResetButtonDisabled = false
+    
+    //keyboard
+    @FocusState private var isTextFieldFocused: Bool
+
     
     var formattedTime: String {
             let minutes = timeRemaining
@@ -40,7 +46,20 @@ struct ContentView: View {
                     .frame(width: 200)
                     .padding()
                     .multilineTextAlignment(.center)
+                    .focused($isTextFieldFocused)
+                    .onAppear {
+                        isTextFieldFocused = true
+                    }
             }
+            .toolbar {
+                ToolbarItemGroup(placement: .keyboard) {
+                    Spacer()
+                    Button("Done") {
+                        isTextFieldFocused = false
+                    }
+                }
+            }
+
             
             ZStack {
                 Circle()
@@ -116,6 +135,7 @@ struct ContentView: View {
                 .background(Color.red)
                 .cornerRadius(10)
                 .shadow(radius: 5)
+                
             }
         }
     }
@@ -126,11 +146,16 @@ struct ContentView: View {
         totalTime = minutes * 60
         timeRemaining = totalTime
         isTextFieldDisabled.toggle()
-        timeInput = "Running ..."
+        isTextFieldFocused = false
+        isStartButtonDisabled = true
+        timeInput = "Seconds left ..."
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
             if timeRemaining > 0 {
                 timeRemaining -= 1
-                randomNumber = Int.random(in: 1...3)
+                if timeRemaining % 60 == 0 {
+                    randomNumber = Int.random(in: 1...3)
+                }
+                
             } else {
                 stopTimer()
                 isTextFieldDisabled.toggle()
@@ -152,6 +177,9 @@ struct ContentView: View {
         timeRemaining = 0
         totalTime = 0
         timeInput = ""
+        isTextFieldFocused = true
+        isTextFieldDisabled = false
+        isStartButtonDisabled = false
     }
 }
 
