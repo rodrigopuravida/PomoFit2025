@@ -16,7 +16,7 @@ struct ContentView: View {
     @State var randomNumber = Int.random(in: 1...3)
     @State private var isTextFieldDisabled = false
     @State private var isStartButtonDisabled = false
-    @State private var isResetButtonDisabled = false
+    @State private var isResetButtonDisabled = true
     
     //keyboard
     @FocusState private var isTextFieldFocused: Bool
@@ -48,7 +48,7 @@ struct ContentView: View {
                     .multilineTextAlignment(.center)
                     .focused($isTextFieldFocused)
                     .onAppear {
-                        isTextFieldFocused = true
+                        //isTextFieldFocused = true
                     }
             }
             .toolbar {
@@ -112,6 +112,7 @@ struct ContentView: View {
                 .background(Color.black)
                 .cornerRadius(10)
                 .shadow(radius: 5)
+                //.opacity(isStartButtonDisabled ? .gray : .black)
                 
                 /*
                 Button(action: stopTimer) {
@@ -133,8 +134,11 @@ struct ContentView: View {
                 .foregroundColor(.white)
                 .padding()
                 .background(Color.red)
+                
                 .cornerRadius(10)
                 .shadow(radius: 5)
+                .disabled(isResetButtonDisabled)
+                
                 
             }
         }
@@ -147,7 +151,8 @@ struct ContentView: View {
         timeRemaining = totalTime
         isTextFieldDisabled.toggle()
         isTextFieldFocused = false
-        isStartButtonDisabled = true
+        //isStartButtonDisabled = true
+        isResetButtonDisabled = false
         timeInput = "Seconds left ..."
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
             if timeRemaining > 0 {
@@ -179,7 +184,8 @@ struct ContentView: View {
         timeInput = ""
         isTextFieldFocused = true
         isTextFieldDisabled = false
-        isStartButtonDisabled = false
+        //isStartButtonDisabled = false
+        isResetButtonDisabled = true
     }
 }
 
