@@ -166,6 +166,8 @@ struct ContentView: View {
                 isTextFieldDisabled.toggle()
             }
         }
+        //locks the app
+        UIApplication.shared.isIdleTimerDisabled = true
     }
     
     
@@ -174,6 +176,9 @@ struct ContentView: View {
         timer?.invalidate()
         timer = nil
         timeInput = ""
+        //unlocks the app
+        UIApplication.shared.isIdleTimerDisabled = false
+
     }
      
     
@@ -186,6 +191,8 @@ struct ContentView: View {
         isTextFieldDisabled = false
         //isStartButtonDisabled = false
         isResetButtonDisabled = true
+        UIApplication.shared.isIdleTimerDisabled = false
+        
     }
 }
 
