@@ -112,20 +112,6 @@ struct ContentView: View {
                 .background(Color.black)
                 .cornerRadius(10)
                 .shadow(radius: 5)
-                //.opacity(isStartButtonDisabled ? .gray : .black)
-                
-                /*
-                Button(action: stopTimer) {
-                    Text("Stop")
-                }
-                .disabled(!isRunning)
-                .font(.headline)
-                .foregroundColor(.white)
-                .padding()
-                .background(Color.red)
-                .cornerRadius(10)
-                .shadow(radius: 5)
-                 */
                 
                 Button(action: resetTimer) {
                     Text("Reset")
