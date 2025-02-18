@@ -17,6 +17,7 @@ struct ContentView: View {
     @State private var isTextFieldDisabled = false
     @State private var isStartButtonDisabled = false
     @State private var isResetButtonDisabled = true
+    @State private var showSettings = false
     
     //keyboard
     @FocusState private var isTextFieldFocused: Bool
@@ -31,101 +32,115 @@ struct ContentView: View {
     
     
     var body: some View {
-        VStack {
+        NavigationView {
             VStack {
-                Text("Time to focus")
-                    .font(.largeTitle)
-                Text("Enter your time in minutes below")
-                    .font(.subheadline)
-                
-                TextField("Minutes", text: $timeInput)
-                    .font(.title)
-                    .keyboardType(.numberPad)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .disabled(isTextFieldDisabled)
-                    .frame(width: 200)
-                    .padding()
-                    .multilineTextAlignment(.center)
-                    .focused($isTextFieldFocused)
-                    .onAppear {
-                        //isTextFieldFocused = true
-                    }
-            }
-            .toolbar {
-                ToolbarItemGroup(placement: .keyboard) {
-                    Spacer()
-                    Button("Done") {
-                        isTextFieldFocused = false
+                VStack {
+                    Text("Time to focus")
+                        .font(.largeTitle)
+                    Text("Enter your time in minutes below")
+                        .font(.subheadline)
+                    
+                    TextField("Minutes", text: $timeInput)
+                        .font(.title)
+                        .keyboardType(.numberPad)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .disabled(isTextFieldDisabled)
+                        .frame(width: 200)
+                        .padding()
+                        .multilineTextAlignment(.center)
+                        .focused($isTextFieldFocused)
+                        .onAppear {
+                            //isTextFieldFocused = true
+                        }
+                }
+                .toolbar {
+                    ToolbarItemGroup(placement: .keyboard) {
+                        Spacer()
+                        Button("Done") {
+                            isTextFieldFocused = false
+                        }
                     }
                 }
-            }
 
-            
-            ZStack {
-                Circle()
-                    .stroke(lineWidth: 10)
-                    .opacity(0.3)
-                    .foregroundColor(.gray)
                 
-                Circle()
-                    .trim(from: 0.0, to: CGFloat(timeRemaining) / CGFloat(totalTime))
-                    .stroke(style: StrokeStyle(lineWidth: 5, lineCap: .round, lineJoin: .round))
-                    .foregroundColor(.red)
-                    .rotationEffect(Angle(degrees: 270))
-                    .animation(.linear, value: timeRemaining)
-                
-                //Text("\(timeRemaining/60)")
-                Text(formattedTime)
-                    .font(.title)
-                    .foregroundColor(.red)
-            }
-            .frame(width: 100, height: 100)
-            
-            if (randomNumber == 1) {
-                Image("Battle")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .clipShape(RoundedRectangle(cornerRadius: 25))
-                    .padding()
-            } else if (randomNumber == 2) {
-                Image("Sitting2")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .clipShape(RoundedRectangle(cornerRadius: 25))
-                    .padding()
-            } else {
-                Image("Tarz")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .clipShape(RoundedRectangle(cornerRadius: 25))
-                    .padding()
-            }
-            
-            HStack {
-                Button(action: startTimer) {
-                    Text("Start")
+                ZStack {
+                    Circle()
+                        .stroke(lineWidth: 10)
+                        .opacity(0.3)
+                        .foregroundColor(.gray)
+                    
+                    Circle()
+                        .trim(from: 0.0, to: CGFloat(timeRemaining) / CGFloat(totalTime))
+                        .stroke(style: StrokeStyle(lineWidth: 5, lineCap: .round, lineJoin: .round))
+                        .foregroundColor(.red)
+                        .rotationEffect(Angle(degrees: 270))
+                        .animation(.linear, value: timeRemaining)
+                    
+                    //Text("\(timeRemaining/60)")
+                    Text(formattedTime)
+                        .font(.title)
+                        .foregroundColor(.red)
                 }
-                .disabled(isRunning)
-                .font(.headline)
-                .foregroundColor(.white)
-                .padding()
-                .background(Color.black)
-                .cornerRadius(10)
-                .shadow(radius: 5)
+                .frame(width: 100, height: 100)
                 
-                Button(action: resetTimer) {
-                    Text("Reset")
+                if (randomNumber == 1) {
+                    Image("Battle")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .clipShape(RoundedRectangle(cornerRadius: 25))
+                        .padding()
+                } else if (randomNumber == 2) {
+                    Image("Sitting2")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .clipShape(RoundedRectangle(cornerRadius: 25))
+                        .padding()
+                } else {
+                    Image("Tarz")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .clipShape(RoundedRectangle(cornerRadius: 25))
+                        .padding()
                 }
-                .font(.headline)
-                .foregroundColor(.white)
-                .padding()
-                .background(Color.red)
                 
-                .cornerRadius(10)
-                .shadow(radius: 5)
-                .disabled(isResetButtonDisabled)
-                
-                
+                HStack {
+                    Button(action: startTimer) {
+                        Text("Start")
+                    }
+                    .disabled(isRunning)
+                    .font(.headline)
+                    .foregroundColor(.white)
+                    .padding()
+                    .background(Color.black)
+                    .cornerRadius(10)
+                    .shadow(radius: 5)
+                    
+                    Button(action: resetTimer) {
+                        Text("Reset")
+                    }
+                    .font(.headline)
+                    .foregroundColor(.white)
+                    .padding()
+                    .background(Color.red)
+                    
+                    .cornerRadius(10)
+                    .shadow(radius: 5)
+                    .disabled(isResetButtonDisabled)
+                    
+                    
+                }
+            }
+            .navigationBarItems(trailing: 
+                Button(action: {
+                    showSettings = true
+                }) {
+                    Image(systemName: "line.horizontal.3")
+                        .imageScale(.large)
+                        .foregroundColor(.red)
+                }
+            )
+            .sheet(isPresented: $showSettings) {
+                SettingsView()
             }
         }
     }
