@@ -1,8 +1,8 @@
 import SwiftUI
 
 struct SettingsView: View {
+    @EnvironmentObject var settings: SettingsManager
     @State private var notificationsEnabled = true
-    @State private var soundEnabled = true
     @State private var isDarkMode = false
     
     var body: some View {
@@ -17,7 +17,7 @@ struct SettingsView: View {
                         }
                     }
                     
-                    Toggle(isOn: $soundEnabled) {
+                    Toggle(isOn: $settings.soundEnabled) {
                         HStack {
                             Image(systemName: "speaker.wave.2.fill")
                                 .foregroundColor(.red)

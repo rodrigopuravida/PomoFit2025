@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ContentView: View {
+    @StateObject private var settings = SettingsManager()
     @State private var timeRemaining = 0
     @State private var totalTime = 0
     @State private var timer: Timer?
@@ -141,6 +142,7 @@ struct ContentView: View {
             )
             .sheet(isPresented: $showSettings) {
                 SettingsView()
+                    .environmentObject(settings)
             }
         }
     }
@@ -161,10 +163,10 @@ struct ContentView: View {
                 if timeRemaining % 60 == 0 {
                     randomNumber = Int.random(in: 1...3)
                 }
-                
             } else {
                 stopTimer()
                 isTextFieldDisabled.toggle()
+                settings.playCompletionSound()
             }
         }
         //locks the app
