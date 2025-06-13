@@ -2,14 +2,13 @@ import SwiftUI
 
 struct SettingsView: View {
     @EnvironmentObject var settings: SettingsManager
-    @State private var notificationsEnabled = true
     @State private var isDarkMode = false
     
     var body: some View {
         NavigationView {
             List {
                 Section(header: Text("General")) {
-                    Toggle(isOn: $notificationsEnabled) {
+                    Toggle(isOn: $settings.notificationsEnabled) {
                         HStack {
                             Image(systemName: "bell.fill")
                                 .foregroundColor(.red)

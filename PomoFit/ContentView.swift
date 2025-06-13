@@ -157,6 +157,10 @@ struct ContentView: View {
         //isStartButtonDisabled = true
         isResetButtonDisabled = false
         timeInput = "Seconds left ..."
+        
+        // Schedule notification for timer completion
+        settings.scheduleCompletionNotification(for: minutes)
+        
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
             if timeRemaining > 0 {
                 timeRemaining -= 1
@@ -179,6 +183,10 @@ struct ContentView: View {
         timer?.invalidate()
         timer = nil
         timeInput = ""
+        
+        // Cancel any scheduled notifications since timer stopped early
+        settings.cancelScheduledNotifications()
+        
         //unlocks the app
         UIApplication.shared.isIdleTimerDisabled = false
 
@@ -196,6 +204,8 @@ struct ContentView: View {
         isResetButtonDisabled = true
         UIApplication.shared.isIdleTimerDisabled = false
         
+        // Cancel any scheduled notifications since timer was reset
+        settings.cancelScheduledNotifications()
     }
 }
 
